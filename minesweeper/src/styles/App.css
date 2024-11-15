@@ -1,0 +1,11 @@
+#root {
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  /* 4x4の時はこれでよいが、GRID_SIZEに合わせて4を変える必要あり */
+  grid-template-columns: repeat(4, 50px);
+  grid-gap: 5px;
+  margin: 20px auto;
+}

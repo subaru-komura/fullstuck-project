@@ -1,6 +1,6 @@
 # About fullstuck-project
 
-you can enjoy game!
+you can enjoy Minesweeper!(多分)
 
 ## Getting Started
 
@@ -12,16 +12,18 @@ you can enjoy game!
 
 2. Install NPM packages
 
+   `cd minesweeper`  
    `npm install`
 
 ## Usage
 
-coming soon
+`npm run dev`
+access http://localhost:5173/
 
 ## Roadmap
 
-nothing
+coming soon
 
 ## Contributing
 
-only me
+Contributions, issues and feature requests are welcome.
