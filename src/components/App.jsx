@@ -4,8 +4,16 @@ import Cell from "./Cell";
 import Score from "./Score";
 import Timer from "./Timer";
 //マテリアルデザインの部品を拝借
-import { Button } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+} from "@mui/material";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const GRID_SIZE = 4; // 4x4のグリッド
 const NUM_MINES = 3; // 地雷の数
 
@@ -67,6 +75,24 @@ function App() {
   const stopwatchPause = useRef(null); // ストップウォッチの一時停止関数を保持
   const [winTime, setwinTime] = useState(null); //ゲームに勝利した時の時刻を保存
   const [hasStarted, setHasStarted] = useState(false); // 初クリック判定
+  const [showWinDialog, setShowWinDialog] = useState(false); // 勝利ダイアログ表示状態
+  const [playerName, setPlayerName] = useState(""); // プレイヤー名の状態
+
+  // プレイヤー名とタイムをPOSTする関数
+  const submitScore = async () => {
+    if (winTime && playerName) {
+      try {
+        const response = await fetch(`${baseUrl}/timingregister`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ player: playerName, time: winTime }),
+        });
+        if (!response.ok) throw new Error("Failed to register score");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   //Cellがクリックされた際にBoardを更新して再描画させる
   function clickCell(rowIndex, colIndex) {
@@ -104,6 +130,9 @@ function App() {
     ) {
       console.log("You Win!");
       stopwatchPause.current(true); // 勝利時の時刻を打刻
+      setTimeout(() => {
+        setShowWinDialog(true); // 1秒後にダイアログを表示
+      }, 1000);
     }
     setBoard(tmpboard);
   }
@@ -118,6 +147,9 @@ function App() {
   return (
     <div className="App">
       <h1>Minesweeper</h1>
+      <div className="Score">
+        <Score winTime={winTime} />
+      </div>
       <div className="timer">
         <Timer
           stopwatchStart={stopwatchStart}
@@ -125,9 +157,6 @@ function App() {
           stopwatchPause={stopwatchPause}
           setwinTime={setwinTime}
         />
-      </div>
-      <div className="Score">
-        <Score winTime={winTime} />
       </div>
       <div className="grid">
         {/* {board[0][0].nearbyMines} */}
@@ -148,9 +177,37 @@ function App() {
             resetGame(setBoard, stopwatchReset.current);
             setHasStarted(false);
             setwinTime(null); // リセット時に勝利時の時間もクリア
+            setShowWinDialog(false); // リセット時に勝利ダイアログを閉じる
           }}
         />
       </div>
+
+      {/* 勝利時のプレイヤー名入力ダイアログ */}
+      <Dialog open={showWinDialog} onClose={() => setShowWinDialog(false)}>
+        <DialogTitle>Congratulations! Enter Your Name</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Player Name"
+            type="text"
+            fullWidth
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowWinDialog(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              submitScore();
+              setShowWinDialog(false);
+            }}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 # About fullstuck-project
 
-you can enjoy Minesweeper!(多分)
+you can enjoy Minesweeper!
 
 ## Getting Started
 
@@ -12,17 +12,32 @@ you can enjoy Minesweeper!(多分)
 
 2. Install NPM packages
 
-   `cd minesweeper`  
    `npm install`
 
 ## Usage
 
-`npm run dev`
+1. set up DB
+
+`cd db`
+`npm run migrate`
+`npm run seed`
+
+2. start API
+
+`cd src/backend`
+`npm run start`
+
+3. start APP
+
+`npm run dev`  
 access http://localhost:5173/
 
 ## Roadmap
 
-coming soon
+1. フラグ機能の追加
+2. 地雷敷設のランダム化
+3. 掘り起こしロジックの実装
+4. ランキングのリアルタイム更新機能
 
 ## Contributing
 

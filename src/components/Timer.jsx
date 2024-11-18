@@ -22,7 +22,8 @@ function MyStopwatch({
     };
     stopwatchPause.current = (winflg) => {
       pause();
-      if (winflg) setwinTime(`${minutes}分${seconds}秒`); // 勝利時の時刻を親に渡す
+      // if (winflg) setwinTime(`${minutes}分${seconds}秒`); // 勝利時の時刻を親に渡す
+      if (winflg) setwinTime(minutes * 60 + seconds); // 勝利時の時刻を秒数に変えて親に渡す
     };
   }, [
     start,
@@ -38,8 +39,8 @@ function MyStopwatch({
 
   return (
     <>
-      <span> {minutes}</span>分<span>{seconds}</span>
-      {"秒 "}
+      <span>: {minutes}</span> min <span>{seconds}</span>
+      {" sec "}
     </>
   );
 }
